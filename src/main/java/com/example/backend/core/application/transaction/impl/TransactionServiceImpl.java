@@ -23,7 +23,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new IllegalArgumentException("Amount must be greater than zero.");
         }
 
-        final BigDecimal currentBalance = computeCurrentBalance(transactionList, requestModel.getAccountId());
+        final BigDecimal currentBalance = this.computeCurrentBalance(requestModel.getAccountId());
 
         final Transaction transaction =
             switch (requestModel.getTransactionType()) {
@@ -55,9 +55,10 @@ public class TransactionServiceImpl implements TransactionService {
             .build();
     }
 
-    private BigDecimal computeCurrentBalance(final List<Transaction> transactionList, final Long accountId) {
+    @Override
+    public BigDecimal computeCurrentBalance(final Long accountId) {
 
-        return transactionList.stream()
+        return this.transactionList.stream()
             .filter(transaction -> accountId.equals(transaction.getAccountId()))
             .map(transaction -> {
                 if (TransactionType.DEPOSIT.equals(transaction.getTransactionType())) {
