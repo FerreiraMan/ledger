@@ -3,6 +3,7 @@ package com.example.backend.core.application.transaction.impl;
 import com.example.backend.core.application.transaction.TransactionService;
 import com.example.backend.core.application.transaction.request.CreateTransactionRequestModel;
 import com.example.backend.core.application.transaction.response.CreateTransactionResponseModel;
+import com.example.backend.core.application.transaction.response.FindTransactionHistoryResponseModel;
 import com.example.backend.core.domain.transaction.Transaction;
 import com.example.backend.core.domain.transaction.TransactionType;
 import java.math.BigDecimal;
@@ -39,6 +40,18 @@ public class TransactionServiceImpl implements TransactionService {
             .transactionId(transaction.getId())
             .accountId(transaction.getAccountId())
             .resultingBalance(resultingBalance)
+            .build();
+    }
+
+    @Override
+    public FindTransactionHistoryResponseModel findTransactionHistory(final Long accountId) {
+
+        final List<Transaction> accountTransactionHistory = this.transactionList.stream()
+            .filter(transaction -> accountId.equals(transaction.getAccountId())).toList();
+
+        return FindTransactionHistoryResponseModel.builder()
+            .accountId(accountId)
+            .transactions(accountTransactionHistory)
             .build();
     }
 

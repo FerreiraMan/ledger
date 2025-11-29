@@ -3,10 +3,12 @@ package com.example.backend.entrypoint;
 import com.example.backend.entrypoint.facade.TransactionFacade;
 import com.example.backend.entrypoint.request.CreateTransactionRequestDTO;
 import com.example.backend.entrypoint.response.CreateTransactionResponseDTO;
+import com.example.backend.entrypoint.response.FindTransactionHistoryResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,5 +32,10 @@ public class TransactionController {
         return new ResponseEntity<>(transactionFacade.createTransaction(accountId, createTransactionRequestDTO), HttpStatus.CREATED);
     }
 
+    @GetMapping(path = ACCOUNT_ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FindTransactionHistoryResponseDTO> findTransactionsHistory(@PathVariable final Long accountId) {
+
+        return new ResponseEntity<>(transactionFacade.findTransactionHistory(accountId), HttpStatus.OK);
+    }
 
 }

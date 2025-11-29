@@ -5,6 +5,7 @@ import com.example.backend.core.application.transaction.request.CreateTransactio
 import com.example.backend.entrypoint.facade.TransactionFacade;
 import com.example.backend.entrypoint.request.CreateTransactionRequestDTO;
 import com.example.backend.entrypoint.response.CreateTransactionResponseDTO;
+import com.example.backend.entrypoint.response.FindTransactionHistoryResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,12 @@ public class TransactionFacadeImpl implements TransactionFacade {
             .build();
 
         return CreateTransactionResponseDTO.from(transactionService.createTransaction(requestModel));
+    }
+
+    @Override
+    public FindTransactionHistoryResponseDTO findTransactionHistory(final Long accountId) {
+
+        return FindTransactionHistoryResponseDTO.from(transactionService.findTransactionHistory(accountId));
     }
 
 }
