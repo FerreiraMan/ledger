@@ -1,6 +1,7 @@
 package com.example.backend.entrypoint.request;
 
 import com.example.backend.core.domain.transaction.TransactionType;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateTransactionRequestDTO {
 
+    @NotNull
     private TransactionType transactionType;
+    @NotNull
     private BigDecimal amount;
 }
