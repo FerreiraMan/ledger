@@ -42,7 +42,7 @@ curl -X POST http://localhost:8080/api/transactions/{accountId}
     "amount": 10.50
 }
 ```
-Response example:
+**Response example:**
 ```json
 {
   "accountId": 1,
@@ -56,7 +56,7 @@ Response example:
 curl -X GET http://localhost:8080/api/accounts/{accountId}/balance 
 -H "Content-Type: application/json"
 ```
-Response example:
+**Response example:**
 ```json
 {
   "accountId": 1,
@@ -69,7 +69,7 @@ Response example:
 curl -X GET http://localhost:8080/api/transactions/{accountId}/transaction-history 
 -H "Content-Type: application/json"
 ```
-Response example:
+**Response example:**
 ```json
 {
   "accountId": 1,
