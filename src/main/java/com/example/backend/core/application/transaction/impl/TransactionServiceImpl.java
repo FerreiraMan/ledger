@@ -23,24 +23,26 @@ public class TransactionServiceImpl implements TransactionService {
             throw new IllegalArgumentException("Amount must be greater than zero.");
         }
 
-        final BigDecimal currentBalance = this.computeCurrentBalance(requestModel.getAccountId());
+        synchronized (this.transactionList) {
+            final BigDecimal currentBalance = this.computeCurrentBalance(requestModel.getAccountId());
 
-        final Transaction transaction =
-            switch (requestModel.getTransactionType()) {
-                case DEPOSIT -> handleDeposit(requestModel);
-                case WITHDRAWAL -> handleWithdrawal(requestModel, currentBalance);
-            };
+            final Transaction transaction =
+                switch (requestModel.getTransactionType()) {
+                    case DEPOSIT -> handleDeposit(requestModel);
+                    case WITHDRAWAL -> handleWithdrawal(requestModel, currentBalance);
+                };
 
-        transactionList.add(transaction);
+            transactionList.add(transaction);
 
-        final BigDecimal resultingBalance = TransactionType.DEPOSIT.equals(requestModel.getTransactionType()) ?
-            currentBalance.add(requestModel.getAmount()) : currentBalance.subtract(requestModel.getAmount());
+            final BigDecimal resultingBalance = TransactionType.DEPOSIT.equals(requestModel.getTransactionType()) ?
+                currentBalance.add(requestModel.getAmount()) : currentBalance.subtract(requestModel.getAmount());
 
-        return CreateTransactionResponseModel.builder()
-            .transactionId(transaction.getId())
-            .accountId(transaction.getAccountId())
-            .resultingBalance(resultingBalance)
-            .build();
+            return CreateTransactionResponseModel.builder()
+                .transactionId(transaction.getId())
+                .accountId(transaction.getAccountId())
+                .resultingBalance(resultingBalance)
+                .build();
+        }
     }
 
     @Override

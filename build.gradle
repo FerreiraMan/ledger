@@ -24,6 +24,18 @@ repositories {
 	mavenCentral()
 }
 
+tasks.register('initApplication', Exec) {
+	description = 'Build latest JAR and start application with Docker Compose'
+	dependsOn 'bootJar'
+	workingDir "$projectDir"
+	commandLine 'docker', 'compose', 'up', '-d', '--build', 'tiny-ledger'
+}
+
+tasks.register('finalizeBuild', Exec) {
+	workingDir "$projectDir"
+	commandLine 'docker', 'compose', 'down', '--remove-orphans'
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation('org.springframework.boot:spring-boot-starter-validation')
