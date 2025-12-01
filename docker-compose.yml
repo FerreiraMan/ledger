@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  tiny-ledger:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tiny-ledger-app
+    ports:
+      - "8080:8080"
