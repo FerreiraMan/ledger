@@ -1,6 +1,8 @@
 package com.example.backend.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import com.example.backend.core.application.transaction.impl.TransactionServiceImpl;
 import com.example.backend.core.application.transaction.request.CreateTransactionRequestModel;
@@ -15,14 +17,50 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class TransactionServiceImplTest {
 
+    @Spy //this could be removed if balance calculation was to be removed from transaction service
     @InjectMocks
     private TransactionServiceImpl transactionService;
+
+    @ParameterizedTest
+    @ValueSource(longs = {0,-1})
+    void createDepositTransaction_withAmountNotGreaterThanZero_noTransactionIsCreated(final long amount) {
+        //GIVEN
+        final CreateTransactionRequestModel requestModel = CreateTransactionRequestModel.builder()
+            .accountId(1L)
+            .transactionType(TransactionType.DEPOSIT)
+            .amount(BigDecimal.valueOf(amount))
+            .build();
+        //WHEN
+        assertThrows(IllegalArgumentException.class, () -> {
+            transactionService.createTransaction(requestModel);
+        });
+    }
+
+    @Test
+    void createWithdrawalTransaction_withInsufficientBalance_noTransactionIsCreated() {
+        //GIVEN
+        final CreateTransactionRequestModel requestModel = CreateTransactionRequestModel.builder()
+            .accountId(1L)
+            .transactionType(TransactionType.WITHDRAWAL)
+            .amount(BigDecimal.TEN)
+            .build();
+
+        when(transactionService.computeCurrentBalance(1L)).thenReturn(BigDecimal.ONE);
+
+        //WHEN
+        assertThrows(IllegalArgumentException.class, () -> {
+            transactionService.createTransaction(requestModel);
+        });
+    }
 
     @Test
     void createConcurrentTransactions_noTransactionIsLost() throws InterruptedException {
