@@ -19,7 +19,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public CreateTransactionResponseModel createTransaction(final CreateTransactionRequestModel requestModel) {
 
-        if (BigDecimal.ZERO.compareTo(requestModel.getAmount()) >= 0) {
+        final BigDecimal amount = new BigDecimal(requestModel.getAmount());
+        final Long accountId = requestModel.getAccountId();
+
+        if (BigDecimal.ZERO.compareTo(amount) >= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero.");
         }
 
@@ -28,14 +31,14 @@ public class TransactionServiceImpl implements TransactionService {
 
             final Transaction transaction =
                 switch (requestModel.getTransactionType()) {
-                    case DEPOSIT -> handleDeposit(requestModel);
-                    case WITHDRAWAL -> handleWithdrawal(requestModel, currentBalance);
+                    case DEPOSIT -> handleDeposit(accountId, amount);
+                    case WITHDRAWAL -> handleWithdrawal(accountId, amount, currentBalance);
                 };
 
             transactionList.add(transaction);
 
             final BigDecimal resultingBalance = TransactionType.DEPOSIT.equals(requestModel.getTransactionType()) ?
-                currentBalance.add(requestModel.getAmount()) : currentBalance.subtract(requestModel.getAmount());
+                currentBalance.add(amount) : currentBalance.subtract(amount);
 
             return CreateTransactionResponseModel.builder()
                 .transactionId(transaction.getId())
@@ -72,18 +75,18 @@ public class TransactionServiceImpl implements TransactionService {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private Transaction handleDeposit(final CreateTransactionRequestModel requestModel) {
+    private Transaction handleDeposit(final Long accountId, final BigDecimal amount) {
 
-        return new Transaction(requestModel.getAccountId(), TransactionType.DEPOSIT, requestModel.getAmount());
+        return new Transaction(accountId, TransactionType.DEPOSIT, amount);
     }
 
-    private Transaction handleWithdrawal(final CreateTransactionRequestModel requestModel, final BigDecimal currentBalance) {
+    private Transaction handleWithdrawal(final Long accountId, final BigDecimal amount, final BigDecimal currentBalance) {
 
-        if (requestModel.getAmount().compareTo(currentBalance) > 0) {
+        if (amount.compareTo(currentBalance) > 0) {
             throw new IllegalArgumentException("Insufficient balance.");
         }
 
-        return new Transaction(requestModel.getAccountId(), TransactionType.WITHDRAWAL, requestModel.getAmount());
+        return new Transaction(accountId, TransactionType.WITHDRAWAL, amount);
     }
 
 }

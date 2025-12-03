@@ -1,7 +1,6 @@
 package com.example.backend.core.application.transaction.request;
 
 import com.example.backend.core.domain.transaction.TransactionType;
-import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +10,6 @@ public class CreateTransactionRequestModel {
 
     private Long accountId;
     private TransactionType transactionType;
-    private BigDecimal amount;
+    private String amount;
 
 }

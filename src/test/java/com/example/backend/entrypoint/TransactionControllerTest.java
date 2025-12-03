@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.backend.core.domain.transaction.TransactionType;
 import com.example.backend.entrypoint.facade.TransactionFacade;
 import com.example.backend.entrypoint.request.CreateTransactionRequestDTO;
-import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class TransactionControllerTest {
         // GIVEN
         final String accountId = "invalid";
         final CreateTransactionRequestDTO validDTO = CreateTransactionRequestDTO.builder()
-            .amount(BigDecimal.TEN)
+            .amount("10")
             .transactionType(TransactionType.DEPOSIT)
             .build();
 
@@ -49,7 +48,7 @@ public class TransactionControllerTest {
     public void createTransaction_withoutSpecifyingAccountId_returnNotFound() throws Exception {
         // GIVEN
         final CreateTransactionRequestDTO validDTO = CreateTransactionRequestDTO.builder()
-            .amount(BigDecimal.TEN)
+            .amount("10")
             .transactionType(TransactionType.DEPOSIT)
             .build();
 
@@ -93,7 +92,7 @@ public class TransactionControllerTest {
         // GIVEN
         final Long accountId = 1L;
         final CreateTransactionRequestDTO validDTO = CreateTransactionRequestDTO.builder()
-            .amount(BigDecimal.TEN)
+            .amount("10")
             .build();
 
         // WHEN

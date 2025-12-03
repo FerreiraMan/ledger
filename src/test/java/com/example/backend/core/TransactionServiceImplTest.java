@@ -31,13 +31,13 @@ public class TransactionServiceImplTest {
     private TransactionServiceImpl transactionService;
 
     @ParameterizedTest
-    @ValueSource(longs = {0,-1})
-    void createDepositTransaction_withAmountNotGreaterThanZero_noTransactionIsCreated(final long amount) {
+    @ValueSource(strings = {"0", "-1"})
+    void createDepositTransaction_withAmountNotGreaterThanZero_noTransactionIsCreated(final String amount) {
         //GIVEN
         final CreateTransactionRequestModel requestModel = CreateTransactionRequestModel.builder()
             .accountId(1L)
             .transactionType(TransactionType.DEPOSIT)
-            .amount(BigDecimal.valueOf(amount))
+            .amount(amount)
             .build();
         //WHEN
         assertThrows(IllegalArgumentException.class, () -> {
@@ -51,7 +51,7 @@ public class TransactionServiceImplTest {
         final CreateTransactionRequestModel requestModel = CreateTransactionRequestModel.builder()
             .accountId(1L)
             .transactionType(TransactionType.WITHDRAWAL)
-            .amount(BigDecimal.TEN)
+            .amount("10")
             .build();
 
         when(transactionService.computeCurrentBalance(1L)).thenReturn(BigDecimal.ONE);
@@ -68,7 +68,7 @@ public class TransactionServiceImplTest {
         final CreateTransactionRequestModel requestModel = CreateTransactionRequestModel.builder()
             .accountId(1L)
             .transactionType(TransactionType.DEPOSIT)
-            .amount(BigDecimal.ONE)
+            .amount("1")
             .build();
 
         final int numberOfThreads = 20;
