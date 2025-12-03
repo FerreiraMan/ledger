@@ -13,6 +13,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final TransactionService transactionService;
 
+    // When adding persistence layer, additional methods are needed to assert account existence and to upsert accounts.
+    // For now, we assume the account exists
     @Override
     public FindCurrentBalanceResponseModel findCurrentBalance(final Long accountId) {
 

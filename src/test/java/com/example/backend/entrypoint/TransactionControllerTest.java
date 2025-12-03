@@ -27,6 +27,10 @@ public class TransactionControllerTest {
     @MockitoBean
     private TransactionFacade transactionFacade;
 
+    // A lot more unit tests are needed. For the sake of time and complexity, I only added unit tests for concurrency and main business
+    //logic rules.
+    // Additional tests are needed to further test transaction creation, transaction history and balance calculation.
+
     @Test
     public void createTransaction_withInvalidAccountId_returnBadRequest() throws Exception {
         // GIVEN

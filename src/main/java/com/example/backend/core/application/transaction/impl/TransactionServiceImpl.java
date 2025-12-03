@@ -60,6 +60,9 @@ public class TransactionServiceImpl implements TransactionService {
             .build();
     }
 
+    // This ideally would be on a dedicated service or utils class. It was kept here for the sake of simplicity and also because of the
+    // in-memory approach.
+    // When adding persistence layer, this is to be removed onto a calculation service.
     @Override
     public BigDecimal computeCurrentBalance(final Long accountId) {
 

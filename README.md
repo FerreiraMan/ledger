@@ -35,6 +35,11 @@ curl -X POST http://localhost:8080/api/transactions/{accountId}
 -H "Content-Type: application/json" 
 -d '{"transactionType": "DEPOSIT", "amount": 300}'
 ```
+**Conditions:**
+- When proceeding with a DEPOSIT, amount should be greater than 0.
+- When proceeding with a WITHDRAWAL, account should have sufficient balance for the given amount.
+
+
 **Example Request payload:**
 ```json
 {
